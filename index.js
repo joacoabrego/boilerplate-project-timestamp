@@ -4,6 +4,7 @@
 // init project
 var express = require("express");
 var app = express();
+var dateHandler = require("./helpers/handleDateString");
 
 // enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
 // so that your API is remotely testable by FCC
@@ -26,12 +27,15 @@ app.get("/api/hello", function (req, res) {
 app.get("/api/:date?", (req, res, done) => {
   try {
     if (!req.params.date) {
-      req.params.date = new Date();
+      req.params.date = new Date().toISOString().split()[0];
     }
     const unixInput = parseInt(req.params.date);
-    const inputDate = unixInput
-      ? new Date(unixInput)
-      : new Date(req.params.date);
+    const inputDate =
+      req.params.date.includes("/") ||
+      req.params.date.includes("-") ||
+      req.params.date.includes(".")
+        ? new Date(req.params.date)
+        : new Date(unixInput);
     if (inputDate instanceof Date && isFinite(inputDate)) {
       const unixTimestamp = inputDate.getTime();
       const utcString = `${inputDate.toUTCString()}`;
