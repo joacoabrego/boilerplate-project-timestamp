@@ -32,7 +32,9 @@ app.get("/api/:date?", (req, res, done) => {
     const inputDate =
       req.params.date.includes("/") ||
       req.params.date.includes("-") ||
-      req.params.date.includes(".")
+      req.params.date.includes(".") ||
+      req.params.date.includes(":") ||
+      req.params.date.includes(" ")
         ? new Date(req.params.date)
         : new Date(unixInput);
     if (inputDate instanceof Date && isFinite(inputDate)) {
